@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Лови сердечки 💕</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0000, #2d0a0a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            touch-action: manipulation;
+            padding: 10px;
+        }
+
+        #gameContainer {
+            background: #000;
+            border-radius: 30px;
+            padding: 15px;
+            box-shadow: 0 20px 40px rgba(255, 0, 100, 0.3);
+            border: 2px solid #ff3366;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #0a0a0a;
+            border-radius: 20px;
+            cursor: pointer;
+            touch-action: none;
+            border: 2px solid #ff4d6d;
+        }
+
+        #score, #timer {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff4d6d;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid #ff4d6d;
+            white-space: nowrap;
+            backdrop-filter: blur(5px);
+        }
+
+        #score {
+            top: 30px;
+        }
+
+        #timer {
+            top: 90px;
+        }
+
+        #gameOver {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            color: gold;
+            padding: 30px 20px;
+            border-radius: 30px;
+            border: 3px solid #ff4d6d;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+            z-index: 20;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 50px rgba(255, 77, 109, 0.5);
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+
+        #gameOver pre {
+            font-family: inherit;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: gold;
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+
+        #gameOver .heart-ascii {
+            color: #ff3366;
+            font-size: 1.5rem;
+            line-height: 1.2;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            #score, #timer {
+                font-size: 1rem;
+                padding: 5px 15px;
+            }
+
+            #score { top: 20px; }
+            #timer { top: 70px; }
+
+            #gameOver {
+                font-size: 0.9rem;
+                padding: 20px 15px;
+            }
+        }
+
+        .restart-btn {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 20px #ff4d6d;
+            transition: all 0.3s;
+        }
+
+        .restart-btn:active {
+            transform: scale(0.95);
+            background: #ff3355;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="score">💕 Поймано: 0</div>
+        <div id="timer">⏰ Время: 14</div>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="gameOver">
+            <div style="color: #ff4d6d; font-size: 2rem; margin-bottom: 10px;">❤️</div>
+            <pre style="color: gold; font-size: 1.2rem;">Привет, любимая!</pre>
+            <pre>Я эту игру сделал как подарок на 14 февраля</pre>
+            <pre>Если тебе понравилось ахахах могу тебе делать такие чтобы скучно не было</pre>
+            <pre>❤️ Я хочу сказать тебе что правда тебя очень сильно люблю! ❤️</pre>
+            <pre>Ты у меня самая красивая и милая, просто моя королева красоты, ты самый симпатичный человек на свете!</pre>
+            <pre>Ты умный, прекрасный человек с большой и доброй душой</pre>
+            <pre>Я сам себе завидую когда понимаю что ты моя девушка, ты просто прелесть!</pre>
+            <pre>Я всегда радуюсь твоим успехам, рад когда у тебя все хорошо и все получается так, как ты хочешь</pre>
+            <pre>Так же всегда верю в тебя и готов тебе помочь со всем и поддержать тебя!</pre>
+            <pre>Ты мой прекрасный и любимый человек!</pre>
+            <pre>Иногда я веду себя странно, но хочу сказать тебе, что буду только умнеть и улучшаться!</pre>
+            <pre>С праздником тебя!</pre>
+            <div class="heart-ascii">
+    ❤️❤️❤️❤️❤️❤️❤️
+            </div>
+            <pre> </pre>
+            <pre>С любовью поздравляю тебя с праздником!❤️</pre>
+            <pre>[!] Чтобы играть снова нужно перезагрузить страницу</pre>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Размеры канваса
+        canvas.width = 800;
+        canvas.height = 600;
+
+        // Счет и таймер
+        let score = 0;
+        let timeLeft = 14;
+        let gameActive = true;
+        let animationFrame;
+
+        // Массив сердечек
+        let hearts = [];
+        const HEART_COUNT = 7;
+
+        // Класс сердечка
+        class Heart {
+            constructor() {
+                this.x = Math.random() * 700 + 50;
+                this.y = Math.random() * 500 + 50;
+                this.vx = (Math.random() - 0.5) * 4;
+                this.vy = (Math.random() - 0.5) * 4;
+                this.size = 35;
+                this.pulse = 0;
+            }
+
+            update() {
+                if (!gameActive) return;
+
+                // Движение
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Отскок от стен
+                if (this.x < 30 || this.x > canvas.width - 30) {
+                    this.vx *= -1;
+                    this.x = Math.max(30, Math.min(canvas.width - 30, this.x));
+                }
+                if (this.y < 30 || this.y > canvas.height - 30) {
+                    this.vy *= -1;
+                    this.y = Math.max(30, Math.min(canvas.height - 30, this.y));
+                }
+
+                // Пульсация
+                this.pulse = (this.pulse + 0.1) % (Math.PI * 2);
+            }
+
+            draw() {
+                const pulseScale = 1 + Math.sin(this.pulse) * 0.05;
+                const s = this.size * pulseScale;
+
+                ctx.save();
+                ctx.translate(this.x, this.y);
+
+                // Рисуем красивое сердечко
+                ctx.beginPath();
+                ctx.moveTo(0, s * 0.8);
+
+                // Левая часть сердца
+                ctx.bezierCurveTo(
+                    -s * 0.5, -s * 0.3,
+                    -s * 0.8, s * 0.2,
+                    0, s * 0.8
+                );
+
+                // Правая часть сердца
+                ctx.bezierCurveTo(
+                    s * 0.8, s * 0.2,
+                    s * 0.5, -s * 0.3,
+                    0, s * 0.8
+                );
+
+                // Градиент для красоты
+                const gradient = ctx.createRadialGradient(-5, -5, 5, 0, 0, s);
+                gradient.addColorStop(0, '#ff4d6d');
+                gradient.addColorStop(1, '#ff0055');
+
+                ctx.fillStyle = gradient;
+                ctx.shadowColor = '#ff3366';
+                ctx.shadowBlur = 15;
+                ctx.fill();
+
+                // Блик
+                ctx.shadowBlur = 0;
+                ctx.beginPath();
+                ctx.arc(-s * 0.1, -s * 0.1, s * 0.1, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.fill();
+
+                ctx.restore();
+            }
+
+            isClicked(tapX, tapY) {
+                const dx = tapX - this.x;
+                const dy = tapY - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                return distance < this.size;
+            }
+        }
+
+        // Создаем сердечки
+        function initHearts() {
+            hearts = [];
+            for (let i = 0; i < HEART_COUNT; i++) {
+                hearts.push(new Heart());
+            }
+        }
+
+        // Обновление игры
+        function update() {
+            if (!gameActive) return;
+
+            // Очистка канваса
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Фон
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Рисуем звездочки на фоне
+            ctx.fillStyle = '#ff99aa';
+            for (let i = 0; i < 50; i++) {
+                if (i % 2 === 0) {
+                    ctx.globalAlpha = 0.3;
+                    ctx.fillRect(i * 16, Math.sin(i + Date.now() * 0.001) * 10 + 100, 2, 2);
+                    ctx.fillRect(i * 20, Math.cos(i * 2) * 10 + 300, 2, 2);
+                    ctx.fillRect(i * 30, Math.sin(i * 3) * 10 + 500, 2, 2);
+                }
+            }
+            ctx.globalAlpha = 1;
+
+            // Обновляем и рисуем сердечки
+            hearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+
+            animationFrame = requestAnimationFrame(update);
+        }
+
+        // Обработка касаний
+        function handleTap(e) {
+            if (!gameActive) return;
+
+            e.preventDefault();
+
+            // Получаем координаты касания
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            let clientX, clientY;
+
+            if (e.touches) {
+                // Для сенсорного экрана
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                // Для мышки
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+
+            // Проверяем попадание в сердечки
+            for (let i = hearts.length - 1; i >= 0; i--) {
+                if (hearts[i].isClicked(canvasX, canvasY)) {
+                    score++;
+                    document.getElementById('score').innerHTML = `💕 Поймано: ${score}`;
+
+                    // Создаем новое сердечко вместо пойманного
+                    hearts[i] = new Heart();
+
+                    // Вибрация на телефоне (если поддерживается)
+                    if (navigator.vibrate) {
+                        navigator.vibrate(50);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        // Таймер
+        function startTimer() {
+            const timerInterval = setInterval(() => {
+                if (!gameActive) return;
+
+                timeLeft--;
+                document.getElementById('timer').innerHTML = `⏰ Время: ${timeLeft}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    gameActive = false;
+                    showGameOver();
+                }
+            }, 1000);
+        }
+
+        // Показываем поздравление
+        function showGameOver() {
+            document.getElementById('gameOver').style.display = 'block';
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100]);
+            }
+        }
+
+        // Перезапуск игры
+        function restartGame() {
+            gameActive = true;
+            score = 0;
+            timeLeft = 10;
+            document.getElementById('score').innerHTML = '💕 Поймано: 0';
+            document.getElementById('timer').innerHTML = '⏰ Время: 10';
+            document.getElementById('gameOver').style.display = 'none';
+
+            initHearts();
+            startTimer();
+        }
+
+        // Добавляем обработчики событий
+        canvas.addEventListener('touchstart', handleTap, { passive: false });
+        canvas.addEventListener('mousedown', handleTap);
+
+        // Запрещаем скролл при касании
+        canvas.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+
+        // Запускаем игру
+        initHearts();
+        update();
+        startTimer();
+    </script>
+</body>
+</html>
