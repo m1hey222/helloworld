@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Выбери игру для любимой 💝</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0000, #2d0a0a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            padding: 15px;
+        }
+
+        .menu-container {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 40px;
+            padding: 30px 20px;
+            border: 2px solid #ff3366;
+            box-shadow: 0 20px 40px rgba(255, 0, 100, 0.4);
+            max-width: 500px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #ff4d6d;
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff3366;
+            word-break: break-word;
+        }
+
+        .subtitle {
+            color: #ff99aa;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            padding: 0 10px;
+            line-height: 1.6;
+        }
+
+        .heart-decoration {
+            text-align: center;
+            font-size: 2rem;
+            color: #ff3366;
+            margin: 20px 0;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.9; }
+        }
+
+        .game-card {
+            background: rgba(255, 51, 102, 0.1);
+            border: 2px solid #ff3366;
+            border-radius: 30px;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.4);
+            background: rgba(255, 51, 102, 0.2);
+        }
+
+        .game-card:active {
+            transform: scale(0.98);
+        }
+
+        .game-card.selected {
+            border-color: gold;
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 30px gold;
+        }
+
+        .game-card.selected .game-title {
+            color: gold;
+        }
+
+        .game-title {
+            color: #ff4d6d;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-description {
+            color: #ffb3c6;
+            font-size: 1rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .game-meta {
+            display: flex;
+            gap: 20px;
+            color: #ff99aa;
+            font-size: 0.9rem;
+        }
+
+        .game-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .play-button {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 20px #ff4d6d;
+            transition: all 0.3s;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .play-button:active {
+            transform: scale(0.95);
+            background: #ff3355;
+        }
+
+        .play-button:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            background: #999;
+            box-shadow: none;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: #ff99aa;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: #ff3366;
+            font-size: 1.2rem;
+            opacity: 0.3;
+            pointer-events: none;
+            animation: float 3s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            .game-title { font-size: 1.5rem; }
+            .game-description { font-size: 0.9rem; }
+            .play-button { font-size: 1.1rem; padding: 12px 30px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <h1>🎮 ИГРЫ ДЛЯ ТЕБЯ 💕</h1>
+        
+        <div class="heart-decoration">
+            ❤️ 💖 💝
+        </div>
+
+        <div class="subtitle">
+           Выбери игру, в которую ты хочешь поиграть, любовь моя
+        </div>
+
+        <!-- Карточка игры 1: Лови сердечки -->
+        <div class="game-card selected" id="game1-card">
+            <div class="game-title">
+                <span>💕</span> Лови сердечки
+            </div>
+            <div class="game-description">
+                Лови сердечки и зарабатывай очки!
+            </div>
+            <div class="game-meta">
+
+            </div>
+        </div>
+
+        <!-- Карточка игры 2 (заглушка) -->
+        <div class="game-card" id="game2-card">
+            <div class="game-title">
+                Анти-стресс
+            </div>
+            <div class="game-description">
+                Стрелять в меня с дробовика
+            </div>
+            <div class="game-meta">
+                <span>✨ Скоро</span>
+            </div>
+        </div>
+
+        <button class="play-button" id="playBtn">ИГРАТЬ 💝</button>
+
+        <div class="footer-text">
+            Сделано с любовью специально для тебя ❤️
+        </div>
+    </div>
+
+    <script>
+        // Выбранная игра (по умолчанию - первая)
+        let selectedGame = 'game1';
+        
+        // Элементы
+        const game1Card = document.getElementById('game1-card');
+        const game2Card = document.getElementById('game2-card');
+        const playBtn = document.getElementById('playBtn');
+
+        // Добавляем плавающие сердечки для украшения
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = ['❤️', '💖', '💝', '💕', '💗'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.top = '100%';
+            heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+        }
+
+        // Создаем сердечки каждые 500мс
+        setInterval(createFloatingHeart, 500);
+
+        // Обработчики выбора игры
+        game1Card.addEventListener('click', () => {
+            selectedGame = 'game1';
+            game1Card.classList.add('selected');
+            game2Card.classList.remove('selected');
+            
+            // Вибрация при выборе
+            if (navigator.vibrate) {
+                navigator.vibrate(20);
+            }
+        });
+
+        game2Card.addEventListener('click', () => {
+            selectedGame = 'game2';
+            game1Card.classList.remove('selected');
+            game2Card.classList.add('selected');
+            
+            if (navigator.vibrate) {
+                navigator.vibrate(20);
+            }
+        });
+
+        // Обработка нажатия на кнопку "Играть"
+        playBtn.addEventListener('click', () => {
+            if (selectedGame === 'game1') {
+                
+                // Открываем игру в новом окне
+                const gameWindow = window.open('LoveYouMasik.html');
+            } 
+            else {
+                // Для остальных игр показываем сообщение о разработке
+                alert('✨ Эта игра пока в разработке! Но скоро обязательно появится. А пока поиграй в "Лови сердечки" ❤️');
+                // Выбираем первую игру
+                selectedGame = 'game1';
+                game1Card.classList.add('selected');
+                game2Card.classList.remove('selected');
+            }
+            
+            // Вибрация при запуске
+            if (navigator.vibrate) {
+                navigator.vibrate([50, 50, 50]);
+            }
+        });
+
+        // Обработка клавиши "Назад" на Android
+        window.addEventListener('popstate', function(event) {
+            // Возвращаемся в меню выбора
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>
