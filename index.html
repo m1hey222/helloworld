@@ -213,13 +213,13 @@
         <!-- Карточка игры 2 (заглушка) -->
         <div class="game-card" id="game2-card">
             <div class="game-title">
-                Анти-стресс
+                Дай в будку!
             </div>
             <div class="game-description">
-                Стрелять в меня с дробовика
+                Стреляй в меня и зарабатывай очки!
             </div>
             <div class="game-meta">
-                <span>✨ Скоро</span>
+                
             </div>
         </div>
 
@@ -286,6 +286,9 @@
                 // Открываем игру в новом окне
                 const gameWindow = window.open('LoveYouMasik.html', '_self', false);
             } 
+            if (selectedGame == 'game2') {
+                const gameWindow = window.open('', '_self', false);
+            }
             else {
                 // Для остальных игр показываем сообщение о разработке
                 alert('✨ Эта игра пока в разработке! Но скоро обязательно появится. А пока поиграй в "Лови сердечки" ❤️');
@@ -310,5 +313,6 @@
 </body>
 
 </html>
+
 
 
