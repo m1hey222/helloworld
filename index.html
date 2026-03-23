@@ -219,7 +219,19 @@
                 Стреляй в меня и зарабатывай очки!
             </div>
             <div class="game-meta">
-                
+
+            </div>
+        </div>
+
+        <div class="game-card" id="game3-card">
+            <div class="game-title">
+                Судоку...
+            </div>
+            <div class="game-description">
+                Игра в судоку
+            </div>
+            <div class="game-meta">
+                Скоро
             </div>
         </div>
 
@@ -233,7 +245,7 @@
     <script>
         // Выбранная игра (по умолчанию - первая)
         let selectedGame = 'game1';
-        
+
         // Элементы
         const game1Card = document.getElementById('game1-card');
         const game2Card = document.getElementById('game2-card');
@@ -248,7 +260,7 @@
             heart.style.top = '100%';
             heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
             document.body.appendChild(heart);
-            
+
             setTimeout(() => {
                 heart.remove();
             }, 3000);
@@ -262,7 +274,7 @@
             selectedGame = 'game1';
             game1Card.classList.add('selected');
             game2Card.classList.remove('selected');
-            
+
             // Вибрация при выборе
             if (navigator.vibrate) {
                 navigator.vibrate(20);
@@ -273,7 +285,7 @@
             selectedGame = 'game2';
             game1Card.classList.remove('selected');
             game2Card.classList.add('selected');
-            
+
             if (navigator.vibrate) {
                 navigator.vibrate(20);
             }
@@ -282,10 +294,10 @@
         // Обработка нажатия на кнопку "Играть"
         playBtn.addEventListener('click', () => {
             if (selectedGame === 'game1') {
-                
+
                 // Открываем игру в новом окне
                 const gameWindow = window.open('LoveYouMasik.html', '_self', false);
-            } 
+            }
             if (selectedGame == 'game2') {
                 const gameWindow = window.open('day_v_budku.html', '_self', false);
             }
@@ -297,7 +309,7 @@
                 game1Card.classList.add('selected');
                 game2Card.classList.remove('selected');
             }
-            
+
             // Вибрация при запуске
             if (navigator.vibrate) {
                 navigator.vibrate([50, 50, 50]);
@@ -313,7 +325,6 @@
 </body>
 
 </html>
-
 
 
 
